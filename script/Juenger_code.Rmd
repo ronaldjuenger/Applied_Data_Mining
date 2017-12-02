@@ -1,0 +1,58 @@
+---
+title: "Juenger"
+author: "Ronald Juenger"
+date: "December 2, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Crash Analysis
+```{r loading crash data}
+crash <- read.csv("C:/Users/user/Desktop/MSBIA Courses/BIA6301/HW_3/crash.csv")
+```
+
+# Running K-prototype 
+```{r prototype elbow}
+library(clustMixType)
+set.seed(123)
+k.max <- 15
+wss <- sapply(1:k.max, 
+ function(k){kproto(crash, k)$tot.withinss})
+plot(1:k.max, wss,
+ type="b", pch = 19, frame = FALSE, 
+ xlab="Number of clusters K",
+ ylab="Total within-clusters sum of squares")
+```
+
+```{r k-prototype models}
+set.seed(123)
+crash.kproto.4 <- kproto(crash,k=4)
+crash.kproto.5 <- kproto(crash,k=5)
+crash.kproto.6 <- kproto(crash,k=6)
+summary(crash.kproto.4)
+summary(crash.kproto.5)
+summary(crash.kproto.6)
+```
+
+## PCA
+```{r inserting universities data}
+Universities_raw <- read.csv("C:/Users/user/Desktop/MSBIA Courses/BIA6301/HW_3/Universities_raw.csv")
+```
+
+# Remove NAs and Categorical Variables
+```{r remove nas and cat variables}
+Universities <- na.omit(Universities_raw)
+Universities <- Universities[,-1]
+```
+
+# Run principal components
+```{r running principal components}
+pcs <- prcomp(Universities, scale. = T)
+summary(pcs)
+screeplot(pcs, type = "line")
+pcs$rotation
+```
+
